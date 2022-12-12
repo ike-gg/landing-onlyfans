@@ -1,7 +1,12 @@
+import React from "react";
 import Paragraph from "./atoms/Paragraph";
 import Title from "./atoms/Title";
 
-const Profile = () => {
+interface Props {
+  location: string;
+}
+
+const Profile: React.FC<Props> = ({ location }) => {
   return (
     <div className="flex items-center bg-slate-50 p-5 rounded-2xl w-full gap-6 border-2 border-slate-100">
       <img
@@ -15,7 +20,7 @@ const Profile = () => {
           <span className="material-symbols-outlined">check_circle</span>
         </Title>
         <Paragraph align="left">🎂 19 years, 🟢 Online Now</Paragraph>
-        <Paragraph align="left">📍 Szczecin</Paragraph>
+        <Paragraph align="left">📍 {location}</Paragraph>
       </div>
     </div>
   );
