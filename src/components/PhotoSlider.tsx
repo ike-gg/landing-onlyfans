@@ -17,12 +17,14 @@ const PhotoSlider = () => {
     >
       {["asdf", "ff", "af", "fasdf"].map((val, index) => {
         return (
-          <SwiperSlide className="flex justify-center cursor-grab active:cursor-grabbing">
+          <SwiperSlide
+            key={val}
+            className="flex justify-center cursor-grab active:cursor-grabbing"
+          >
             <img
               src={`https://picsum.photos/700/500`}
               alt="xdd"
               className="object-cover aspect-image w-11/12 my-11 rounded-md shadow-xl"
-              key={val}
             />
           </SwiperSlide>
         );
