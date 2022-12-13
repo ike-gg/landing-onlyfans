@@ -1,0 +1,14 @@
+{
+  "files": {
+    "main.css": "/landing-onlyfans/static/css/main.6802a5a9.css",
+    "main.js": "/landing-onlyfans/static/js/main.eb156493.js",
+    "static/media/of-logo.webp": "/landing-onlyfans/static/media/of-logo.e3bfd2cfb29fe2391ed7.webp",
+    "index.html": "/landing-onlyfans/index.html",
+    "main.6802a5a9.css.map": "/landing-onlyfans/static/css/main.6802a5a9.css.map",
+    "main.eb156493.js.map": "/landing-onlyfans/static/js/main.eb156493.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.6802a5a9.css",
+    "static/js/main.eb156493.js"
+  ]
+}
