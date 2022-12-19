@@ -1,44 +1,43 @@
-import { useEffect, useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Pagination, Navigation, Keyboard } from "swiper";
 
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
-import "swiper/css/scrollbar";
-import "swiper/css/keyboard";
+import Skeleton from "react-loading-skeleton";
 
-interface ApiResponse {
-  gallery: {
-    fields: {
-      file: {
-        url: string;
-      };
-    };
-    sys: {
-      id: string;
-    };
+interface Props {
+  images?: {
+    url: string;
+    id: string;
   }[];
 }
 
-const PhotoSlider = () => {
-  const [images, setImages] = useState<{ url: string; id: string }[]>([]);
-  useEffect(() => {
-    const fetchImages = async () => {
-      const rawData = await fetch(
-        "https://sins-agency-backend.vercel.app/api/getLandingContent"
-      );
-      const data = (await rawData.json()) as ApiResponse;
-      const urlImages = data.gallery.map((image) => {
-        const url = image.fields.file.url;
-        const id = image.sys.id;
-        return { url, id };
-      });
-      setImages(urlImages);
-    };
+const PhotoSlider: React.FC<Props> = (props) => {
+  const { images } = props;
 
-    fetchImages().catch(console.error);
-  }, []);
+  let element: JSX.Element[] | JSX.Element = (
+    <div className="m-auto w-11/12">
+      <Skeleton className="aspect-image my-11 rounded-2xl" />
+    </div>
+  );
+
+  if (images) {
+    element = images.map((image) => {
+      return (
+        <SwiperSlide
+          key={image.id}
+          className="flex justify-center cursor-grab active:cursor-grabbing"
+        >
+          <img
+            src={image.url}
+            alt={image.id}
+            className="object-cover aspect-image w-11/12 my-11 rounded-2xl shadow-xl"
+          />
+        </SwiperSlide>
+      );
+    });
+  }
 
   return (
     <Swiper
@@ -47,20 +46,7 @@ const PhotoSlider = () => {
       centeredSlides
       slidesPerView={1}
     >
-      {images.map((image) => {
-        return (
-          <SwiperSlide
-            key={image.id}
-            className="flex justify-center cursor-grab active:cursor-grabbing"
-          >
-            <img
-              src={image.url}
-              alt={image.id}
-              className="object-cover aspect-image w-11/12 my-11 rounded-md shadow-xl"
-            />
-          </SwiperSlide>
-        );
-      })}
+      {element}
     </Swiper>
   );
 };

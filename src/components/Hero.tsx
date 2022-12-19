@@ -1,72 +1,57 @@
+import type { Content, ApiResponse } from "../types/types";
+
 import { useEffect, useState } from "react";
 import Link from "./atoms/Link";
 import Paragraph from "./atoms/Paragraph";
 import PhotoSlider from "./PhotoSlider";
 import Profile from "./Profile";
 
+const BACKEND_ENDPOINT = process.env.REACT_APP_BACKEND_ENDPOINT;
+
 interface Props {
   location: string;
 }
 
-interface ApiResponse {
-  avatar: {
-    fields: {
-      file: {
-        url: string;
-      };
-    };
-  };
-  onlyfansNick: string;
-  onlyfansLink: string;
-  age: string;
-}
-
-interface Details {
-  avatarURL: string;
-  nick: string;
-  link: string;
-  age: string;
-}
-
 const Hero: React.FC<Props> = ({ location }) => {
-  const [details, setDetails] = useState<Details>();
+  const [content, setContent] = useState<Content>();
+  const [contentLoaded, setContentLoaded] = useState<boolean>(false);
+
   useEffect(() => {
-    const fetchImages = async () => {
-      const rawData = await fetch(
-        "https://sins-agency-backend.vercel.app/api/getLandingContent"
-      );
+    const fetchContent = async () => {
+      const rawData = await fetch(`${BACKEND_ENDPOINT}/api/getLandingContent`);
       const data = (await rawData.json()) as ApiResponse;
-      setDetails({
+
+      const images = data.gallery.map((image) => {
+        const url = image.fields.file.url;
+        const id = image.sys.id;
+        return { url, id };
+      });
+
+      setContent({
+        images,
         age: data.age,
-        avatarURL: data.avatar.fields.file.url,
+        avatarUrl: data.avatar.fields.file.url,
         link: data.onlyfansLink,
         nick: data.onlyfansNick,
       });
+      setContentLoaded(true);
     };
 
-    fetchImages().catch(console.error);
+    fetchContent().catch(console.error);
   }, []);
 
   return (
     <section className="max-w-md w-auto m-auto text-center">
-      <PhotoSlider />
+      <PhotoSlider images={content?.images} />
       <section className="flex flex-col items-center w-11/12 m-auto gap-4 mb-20">
-        {details && (
-          <Profile
-            location={location}
-            age={details.age}
-            nickname={details.nick}
-            url={details.link}
-            avatarURL={details.avatarURL}
-          />
-        )}
-        <Paragraph>
+        <Profile details={content} location={location} />
+        <Paragraph skeleton={!contentLoaded}>
           Get exclusive access to my content and interact with me directly.
         </Paragraph>
-        <Paragraph>
+        <Paragraph skeleton={!contentLoaded}>
           🍑💦 Do you live near {location} DM me about making content ;) 🔥🍑
         </Paragraph>
-        {details && <Link href={details.link}>SEE MY ONLYFANS ❤️</Link>}
+        {content && <Link href={content.link}>SEE MY ONLYFANS ❤️</Link>}
       </section>
     </section>
   );

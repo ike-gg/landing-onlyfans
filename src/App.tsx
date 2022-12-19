@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import Header from "./components/Header";
 import Hero from "./components/Hero";
 
+import "react-loading-skeleton/dist/skeleton.css";
+
 interface ApiResponse {
   city: string;
 }
