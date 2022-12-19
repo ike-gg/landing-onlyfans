@@ -27,6 +27,8 @@ const Hero: React.FC<Props> = ({ location }) => {
         return { url, id };
       });
 
+      document.title = `💗 ${data.onlyfansNick}`;
+
       setContent({
         images,
         age: data.age,
